@@ -14,11 +14,23 @@ public class CharacterController : MonoBehaviour
 
     private float maximumSpeed = 8f;
     private bool facingRight = false;
+    private bool isGrounded = true;
+    
+    public bool IsPlayerGrounded
+    {
+        get { return isGrounded; }
+        set { isGrounded = value; }
+    }
 
     void Start()
     {
         facingRight = true;
         myRigidBody = GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        animator.SetBool("grounded", isGrounded);
     }
 
     // Update is called once per frame
@@ -39,9 +51,14 @@ public class CharacterController : MonoBehaviour
             movementSpeed = 5;
         }
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             myRigidBody.velocity = Vector2.up * jumpVelocity;
+        }
+
+        if(!isGrounded)
+        {
+            animator.Play("Player_Jump");
         }
     }
 
@@ -49,13 +66,16 @@ public class CharacterController : MonoBehaviour
     {
         myRigidBody.velocity = new Vector2(horizontal * movementSpeed, myRigidBody.velocity.y);
 
-        if (horizontal != 0)
+        if (isGrounded)
         {
-            animator.Play("Player_Walk");
-        }
-        else
-        {
-            animator.Play("Player_Idle");
+            if (horizontal != 0)
+            {
+                animator.Play("Player_Walk");
+            }
+            else
+            {
+                animator.Play("Player_Idle");
+            }
         }
     }
 
