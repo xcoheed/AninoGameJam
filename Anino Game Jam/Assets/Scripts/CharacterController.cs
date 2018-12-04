@@ -15,6 +15,9 @@ public class CharacterController : MonoBehaviour
     private float maximumSpeed = 8f;
     private bool facingRight = false;
     private bool isGrounded = true;
+
+    private bool isLeft = false;
+    private bool isRight = false;
     
     public bool IsPlayerGrounded
     {
@@ -58,7 +61,10 @@ public class CharacterController : MonoBehaviour
 
         if(!isGrounded)
         {
-            animator.Play("Player_Jump");
+            if (myRigidBody.velocity.y > 0)
+                animator.Play("Player_Jump");
+            else
+                animator.Play("Player_Fall");
         }
     }
 
@@ -72,7 +78,7 @@ public class CharacterController : MonoBehaviour
             {
                 animator.Play("Player_Walk");
             }
-            else
+            else if(myRigidBody.velocity.y <= 0)
             {
                 animator.Play("Player_Idle");
             }
@@ -91,5 +97,30 @@ public class CharacterController : MonoBehaviour
             characterScale.x *= -1;
             transform.localScale = characterScale;
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Collider2D collider = collision.collider;
+
+        if (collider.name == "test")
+        {
+            Vector3 contactPoint = collision.contacts[0].point;
+            Vector3 center = collider.bounds.center;
+
+            bool right = contactPoint.x > center.x;
+            bool left = contactPoint.x < center.x;
+            //bool top = contactPoint.y > center.y;
+            //bool bottom = contactPoint.y < center.y;
+
+            isLeft = left;
+            isRight = right;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        isLeft = false;
+        isRight = false;
     }
 }
