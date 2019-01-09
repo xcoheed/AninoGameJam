@@ -7,6 +7,12 @@ public class ScrollingBackground : MonoBehaviour {
     [SerializeField] private Renderer scrollRenderer;
     [SerializeField] private float speed = 0.5f;
 
+    public float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
+
 	// Use this for initialization
 	void Start () {
 		
