@@ -5,7 +5,7 @@ using UnityEngine;
 public class GroundChecker : MonoBehaviour
 {
     [SerializeField]
-    private CharacterController player;
+    private CharacterControllerWithMovement player;
 
     void OnTriggerStay2D(Collider2D col)
     {
